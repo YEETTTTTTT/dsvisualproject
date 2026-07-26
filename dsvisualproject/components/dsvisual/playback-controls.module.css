@@ -1,0 +1,232 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Scrubber */
+.scrubRow {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.track {
+  position: relative;
+  flex: 1;
+  height: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.track::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 0.5rem;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+}
+
+.fill {
+  position: absolute;
+  left: 0;
+  height: 0.5rem;
+  border-radius: var(--r-pill);
+  background: var(--blue);
+  transition: width 0.2s ease;
+}
+
+.range {
+  position: relative;
+  width: 100%;
+  height: 1.5rem;
+  margin: 0;
+  cursor: pointer;
+  appearance: none;
+  background: transparent;
+}
+
+.range::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: var(--r-pill);
+  background: var(--blue);
+  border: 3px solid var(--surface);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.range::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+}
+
+.range::-moz-range-thumb {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: var(--r-pill);
+  background: var(--blue);
+  border: 3px solid var(--surface);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+}
+
+.range:focus-visible {
+  outline: none;
+}
+
+.range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue) 30%, transparent);
+}
+
+.range:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue) 30%, transparent);
+}
+
+.count {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+/* Transport */
+.transportRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.iconBtn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--r-pill);
+  color: var(--text-muted);
+  background: var(--surface-2);
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.15s ease;
+}
+
+.iconBtn:hover:not(:disabled) {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.iconBtn:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.iconBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.play {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: var(--r-pill);
+  color: #fff;
+  background: var(--blue);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--blue) 42%, transparent);
+  transition: transform 0.16s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.play:hover {
+  transform: scale(1.06);
+  background: var(--blue-strong);
+}
+
+.play:active {
+  transform: scale(0.94);
+}
+
+.iconBtn:focus-visible,
+.play:focus-visible,
+.speedBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px var(--blue);
+}
+
+.iconMd {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.iconLg {
+  width: 1.7rem;
+  height: 1.7rem;
+}
+
+.playGlyph {
+  transform: translateX(2px);
+}
+
+/* Speed */
+.speed {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+}
+
+.speedBtn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  min-width: 2.6rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: var(--r-pill);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  background: transparent;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+.speedBtn:hover:not([data-selected]) {
+  color: var(--text);
+}
+
+.speedBtn[data-selected] {
+  background: var(--surface);
+  color: var(--blue-strong);
+  box-shadow: var(--shadow-soft);
+}

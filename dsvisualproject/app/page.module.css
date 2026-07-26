@@ -1,0 +1,88 @@
+
+.page {
+  min-height: 100dvh;
+}
+
+.main {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Workspace: hero + companion column */
+.workspace {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Hero visualization surface */
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  padding: 1.5rem;
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-soft);
+}
+
+.stageTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.bars {
+  height: 17rem;
+}
+
+/* Companion column: explanation + pseudocode */
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.softCard {
+  padding: 1.5rem;
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Complexity strip — light, borderless, spacious */
+.complexity {
+  padding: 1.5rem 1.75rem;
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+@media (min-width: 640px) {
+  .main {
+    padding: 1.5rem 2rem 5rem;
+  }
+  .stage {
+    padding: 2rem;
+  }
+  .bars {
+    height: 20rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1.7fr) minmax(20rem, 1fr);
+    gap: 1.75rem;
+  }
+  .bars {
+    height: 22rem;
+  }
+}

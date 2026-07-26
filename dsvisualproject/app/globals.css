@@ -1,26 +1,139 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Map the few utility classes still used by the layout shell to our tokens. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ------------------------------------------------------------------ */
+/* DSVisual design tokens — a playful, Google-inspired palette.        */
+/* Four brand hues (blue, red, yellow, green) double as the algorithm  */
+/* state colors; everything else is soft neutral surface + spacing.    */
+/* ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+
+  /* Brand */
+  --blue: #4285f4;
+  --blue-strong: #1a73e8;
+  --red: #ea4335;
+  --yellow: #fbbc05;
+  --green: #34a853;
+
+  /* Surfaces & text */
+  --bg: #f5f8fd;
+  --surface: #ffffff;
+  --surface-2: #eef2fb;
+  --surface-3: #e6ecf7;
+  --text: #1f2430;
+  --text-muted: #5f6674;
+  --text-faint: #949bab;
+  --border: #e6ebf4;
+
+  /* Bar / algorithm states */
+  --bar-default: #c6d4ee;
+  --bar-default-ink: #34435f;
+  --bar-compare: #fbbc05;
+  --bar-compare-ink: #4a3600;
+  --bar-swap: #ea4335;
+  --bar-swap-ink: #ffffff;
+  --bar-pivot: #4285f4;
+  --bar-pivot-ink: #ffffff;
+  --bar-sorted: #34a853;
+  --bar-sorted-ink: #ffffff;
+
+  /* Geometry — oversized, soft rounding */
+  --r-xl: 32px;
+  --r-lg: 26px;
+  --r-md: 18px;
+  --r-sm: 12px;
+  --r-pill: 999px;
+
+  /* Elevation */
+  --shadow-soft: 0 1px 2px rgba(31, 36, 48, 0.06), 0 6px 20px rgba(31, 36, 48, 0.06);
+  --shadow-hover: 0 2px 6px rgba(31, 36, 48, 0.1), 0 12px 34px rgba(31, 36, 48, 0.14);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--bg);
+    color: var(--text);
+    /* Subtle organic background shapes in the brand colors. */
+    background-image:
+      radial-gradient(38rem 38rem at 12% -8%, rgba(66, 133, 244, 0.1), transparent 60%),
+      radial-gradient(32rem 32rem at 105% 8%, rgba(52, 168, 83, 0.09), transparent 60%),
+      radial-gradient(30rem 30rem at 88% 108%, rgba(251, 188, 5, 0.12), transparent 62%),
+      radial-gradient(26rem 26rem at -6% 96%, rgba(234, 67, 53, 0.08), transparent 60%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------ */
+/* Gentle, purposeful motion. All respect reduced-motion.              */
+/* ------------------------------------------------------------------ */
+@keyframes dsv-pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dsv-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dsv-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.dsv-pop-in {
+  animation: dsv-pop-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dsv-fade-in {
+  animation: dsv-fade-in 0.35s ease-out;
+}
+
+.dsv-bob {
+  animation: dsv-bob 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

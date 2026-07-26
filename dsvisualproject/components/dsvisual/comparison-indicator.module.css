@@ -1,0 +1,116 @@
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.85rem;
+  min-height: 4.25rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+}
+
+.idle {
+  background: transparent;
+  border: 2px dashed var(--border);
+}
+
+.idleText {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-faint);
+}
+
+.idleIcon {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.operand {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.operandLabel {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.operandValue {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  background: var(--surface);
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-soft);
+}
+
+.op {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--r-pill);
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  font-weight: 800;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--blue) 40%, transparent);
+}
+
+.arrow {
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--text-faint);
+}
+
+.result {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--r-pill);
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: var(--surface-3);
+  color: var(--text-muted);
+}
+
+.result[data-true] {
+  background: var(--green);
+  color: #fff;
+}
+
+.resultIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.action {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}

@@ -1,0 +1,53 @@
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  background: var(--bar-default);
+  color: var(--bar-default-ink);
+}
+
+.chipIcon {
+  width: 0.78rem;
+  height: 0.78rem;
+}
+
+.chip[data-state="compare"] {
+  background: var(--bar-compare);
+  color: var(--bar-compare-ink);
+}
+.chip[data-state="swap"] {
+  background: var(--bar-swap);
+  color: #fff;
+}
+.chip[data-state="pivot"],
+.chip[data-state="key"] {
+  background: var(--bar-pivot);
+  color: #fff;
+}
+.chip[data-state="sorted"] {
+  background: var(--bar-sorted);
+  color: #fff;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
