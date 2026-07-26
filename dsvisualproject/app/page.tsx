@@ -149,7 +149,11 @@ export default function Page() {
               />
             </div>
             <div className={styles.softCard}>
-              <PseudocodePanel lines={algorithm.pseudocode} activeLine={current.line} />
+              <PseudocodePanel
+                lines={algorithm.pseudocode}
+                activeLine={current.line}
+                algorithmId={algorithm.id}
+              />
             </div>
           </aside>
         </div>

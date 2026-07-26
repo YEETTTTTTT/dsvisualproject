@@ -42,6 +42,7 @@ export function AlgorithmSelector({ value, onChange, disabled }: AlgorithmSelect
         <span className={styles.summaryName}>{active.name}</span>
         {active.summary}
       </p>
+      <p className={styles.usageExample}>{active.usageExample}</p>
     </section>
   )
 }

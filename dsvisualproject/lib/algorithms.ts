@@ -34,6 +34,7 @@ export interface AlgorithmMeta {
   id: AlgorithmId
   name: string
   summary: string
+  usageExample: string
   pseudocode: string[]
   complexity: {
     best: string
@@ -51,6 +52,10 @@ export type AlgorithmId =
   | "insertion"
   | "merge"
   | "quick"
+  | "heap"
+  | "counting"
+  | "radix"
+  | "bucket"
 
 // ---------------------------------------------------------------------------
 // Bubble sort
@@ -394,6 +399,203 @@ function quickSort(input: number[]): SortStep[] {
 }
 
 // ---------------------------------------------------------------------------
+// Heap sort
+// ---------------------------------------------------------------------------
+function heapSort(input: number[]): SortStep[] {
+  const a = [...input]
+  const steps: SortStep[] = []
+  const sorted = new Set<number>()
+
+  const push = (highlights: Record<number, HighlightKind>, explanation: string, line: number, compare?: StepCompare) => {
+    const merged: Record<number, HighlightKind> = {}
+    sorted.forEach((index) => (merged[index] = "sorted"))
+    Object.assign(merged, highlights)
+    steps.push({ array: [...a], highlights: merged, explanation, line, compare })
+  }
+
+  const siftDown = (root: number, size: number) => {
+    while (true) {
+      const left = root * 2 + 1
+      const right = left + 1
+      let largest = root
+
+      if (left < size) {
+        const leftWins = a[left] > a[largest]
+        push(
+          { [largest]: "pivot", [left]: "compare" },
+          `Compare parent ${a[largest]} with left child ${a[left]}.`,
+          4,
+          {
+            left: `a[${left}]`,
+            right: `a[${largest}]`,
+            leftValue: a[left],
+            rightValue: a[largest],
+            op: ">",
+            result: leftWins,
+            action: leftWins ? "left child becomes largest" : "keep parent largest",
+          },
+        )
+        if (leftWins) largest = left
+      }
+      if (right < size) {
+        const rightWins = a[right] > a[largest]
+        push(
+          { [largest]: "pivot", [right]: "compare" },
+          `Compare current largest ${a[largest]} with right child ${a[right]}.`,
+          4,
+          {
+            left: `a[${right}]`,
+            right: `a[${largest}]`,
+            leftValue: a[right],
+            rightValue: a[largest],
+            op: ">",
+            result: rightWins,
+            action: rightWins ? "right child becomes largest" : "keep current largest",
+          },
+        )
+        if (rightWins) largest = right
+      }
+      if (largest === root) return
+      ;[a[root], a[largest]] = [a[largest], a[root]]
+      push({ [root]: "swap", [largest]: "swap" }, `Swap ${a[largest]} down to restore the max heap.`, 5)
+      root = largest
+    }
+  }
+
+  push({}, "Starting heap sort. Build a max heap, then repeatedly move its largest value to the end.", 0)
+  for (let root = Math.floor(a.length / 2) - 1; root >= 0; root--) {
+    push({ [root]: "pivot" }, `Heapify the subtree rooted at position ${root}.`, 2)
+    siftDown(root, a.length)
+  }
+  push({}, "The array now forms a max heap.", 6)
+
+  for (let end = a.length - 1; end > 0; end--) {
+    ;[a[0], a[end]] = [a[end], a[0]]
+    sorted.add(end)
+    push({ 0: "swap", [end]: "swap" }, `Move the maximum value into final position ${end}.`, 7)
+    siftDown(0, end)
+  }
+  if (a.length) sorted.add(0)
+  push({}, "The array is fully sorted.", 8)
+  return steps
+}
+
+// ---------------------------------------------------------------------------
+// Counting sort
+// ---------------------------------------------------------------------------
+function countingSort(input: number[]): SortStep[] {
+  const a = [...input]
+  const steps: SortStep[] = []
+  const max = Math.max(...a, 0)
+
+  const push = (highlights: Record<number, HighlightKind>, explanation: string, line: number) => {
+    steps.push({ array: [...a], highlights, explanation, line })
+  }
+
+  push({}, "Starting counting sort. Count each value, then write values back in ascending order.", 0)
+  const counts = Array(max + 1).fill(0)
+  for (let index = 0; index < a.length; index++) {
+    counts[a[index]]++
+    push({ [index]: "key" }, `Count one occurrence of ${a[index]}.`, 2)
+  }
+
+  let write = 0
+  for (let value = 0; value <= max; value++) {
+    if (counts[value] === 0) continue
+    push({}, `Value ${value} occurs ${counts[value]} time${counts[value] === 1 ? "" : "s"}; write it back.`, 4)
+    for (let occurrence = 0; occurrence < counts[value]; occurrence++) {
+      a[write] = value
+      push({ [write]: "swap" }, `Write ${value} at position ${write}.`, 5)
+      write++
+    }
+  }
+  const sorted: Record<number, HighlightKind> = {}
+  a.forEach((_, index) => (sorted[index] = "sorted"))
+  push(sorted, "The array is fully sorted.", 6)
+  return steps
+}
+
+// ---------------------------------------------------------------------------
+// Radix sort
+// ---------------------------------------------------------------------------
+function radixSort(input: number[]): SortStep[] {
+  const a = [...input]
+  const steps: SortStep[] = []
+  const max = Math.max(...a, 0)
+
+  const push = (highlights: Record<number, HighlightKind>, explanation: string, line: number) => {
+    steps.push({ array: [...a], highlights, explanation, line })
+  }
+
+  push({}, "Starting radix sort. Sort by the ones digit, then tens, hundreds, and so on.", 0)
+  for (let place = 1; Math.floor(max / place) > 0; place *= 10) {
+    const output = Array<number>(a.length)
+    const counts = Array(10).fill(0)
+    push({}, `Sort values by their ${place === 1 ? "ones" : place === 10 ? "tens" : `${place}s`} digit.`, 2)
+    for (let index = 0; index < a.length; index++) {
+      const digit = Math.floor(a[index] / place) % 10
+      counts[digit]++
+      push({ [index]: "key" }, `Place ${a[index]} in digit bucket ${digit}.`, 3)
+    }
+    for (let digit = 1; digit < 10; digit++) counts[digit] += counts[digit - 1]
+    for (let index = a.length - 1; index >= 0; index--) {
+      const digit = Math.floor(a[index] / place) % 10
+      output[--counts[digit]] = a[index]
+    }
+    for (let index = 0; index < a.length; index++) {
+      a[index] = output[index]
+      push({ [index]: "swap" }, `Write ${a[index]} back at position ${index} after this digit pass.`, 5)
+    }
+  }
+  const sorted: Record<number, HighlightKind> = {}
+  a.forEach((_, index) => (sorted[index] = "sorted"))
+  push(sorted, "All digit passes are complete; the array is fully sorted.", 6)
+  return steps
+}
+
+// ---------------------------------------------------------------------------
+// Bucket sort
+// ---------------------------------------------------------------------------
+function bucketSort(input: number[]): SortStep[] {
+  const a = [...input]
+  const steps: SortStep[] = []
+
+  const push = (highlights: Record<number, HighlightKind>, explanation: string, line: number) => {
+    steps.push({ array: [...a], highlights, explanation, line })
+  }
+
+  push({}, "Starting bucket sort. Distribute values into ranges, sort each bucket, then combine them.", 0)
+  const min = Math.min(...a, 0)
+  const max = Math.max(...a, 0)
+  const bucketCount = Math.max(1, Math.ceil(Math.sqrt(a.length)))
+  const width = Math.max(1, Math.ceil((max - min + 1) / bucketCount))
+  const buckets = Array.from({ length: bucketCount }, () => [] as number[])
+
+  for (let index = 0; index < a.length; index++) {
+    const bucket = Math.min(bucketCount - 1, Math.floor((a[index] - min) / width))
+    buckets[bucket].push(a[index])
+    push({ [index]: "key" }, `Place ${a[index]} in bucket ${bucket}.`, 2)
+  }
+
+  let write = 0
+  for (let bucket = 0; bucket < buckets.length; bucket++) {
+    const values = buckets[bucket]
+    if (values.length === 0) continue
+    values.sort((left, right) => left - right)
+    push({}, `Sort bucket ${bucket}: ${values.join(", ")}.`, 3)
+    for (const value of values) {
+      a[write] = value
+      push({ [write]: "swap" }, `Copy ${value} from bucket ${bucket} to position ${write}.`, 5)
+      write++
+    }
+  }
+  const sorted: Record<number, HighlightKind> = {}
+  a.forEach((_, index) => (sorted[index] = "sorted"))
+  push(sorted, "All buckets are combined; the array is fully sorted.", 6)
+  return steps
+}
+
+// ---------------------------------------------------------------------------
 // Registry
 // ---------------------------------------------------------------------------
 export const ALGORITHMS: Record<AlgorithmId, AlgorithmMeta> = {
@@ -401,6 +603,7 @@ export const ALGORITHMS: Record<AlgorithmId, AlgorithmMeta> = {
     id: "bubble",
     name: "Bubble Sort",
     summary: "Repeatedly compares adjacent items and swaps them until the largest values bubble to the end.",
+    usageExample: "Example use: teaching adjacent comparisons on a small or nearly sorted list, because each swap is easy to follow.",
     pseudocode: [
       "for i = 0 to n - 1",
       "  for j = 0 to n - i - 2",
@@ -416,6 +619,7 @@ export const ALGORITHMS: Record<AlgorithmId, AlgorithmMeta> = {
     id: "selection",
     name: "Selection Sort",
     summary: "Finds the smallest remaining value on each pass and moves it into the sorted region.",
+    usageExample: "Example use: small collections when writes are costly, because it makes at most one swap per pass.",
     pseudocode: [
       "for i = 0 to n - 1",
       "  min = i",
@@ -433,6 +637,7 @@ export const ALGORITHMS: Record<AlgorithmId, AlgorithmMeta> = {
     id: "insertion",
     name: "Insertion Sort",
     summary: "Builds a sorted region one element at a time by inserting each new value into place.",
+    usageExample: "Example use: keeping a small, nearly sorted list ordered, because it finishes quickly when few items are out of place.",
     pseudocode: [
       "for i = 1 to n - 1",
       "  key = a[i]",
@@ -449,6 +654,7 @@ export const ALGORITHMS: Record<AlgorithmId, AlgorithmMeta> = {
     id: "merge",
     name: "Merge Sort",
     summary: "Recursively splits the array in half, then merges the sorted halves back together.",
+    usageExample: "Example use: sorting records where equal items must retain their original order, because its stable O(n log n) performance is predictable.",
     pseudocode: [
       "function sort(lo, hi)",
       "  if lo >= hi return",
@@ -466,6 +672,7 @@ export const ALGORITHMS: Record<AlgorithmId, AlgorithmMeta> = {
     id: "quick",
     name: "Quick Sort",
     summary: "Picks a pivot, partitions values around it, then recursively sorts each partition.",
+    usageExample: "Example use: in-memory general-purpose sorting, because it is typically fast and uses little additional memory.",
     pseudocode: [
       "function sort(lo, hi)",
       "  if lo >= hi return",
@@ -479,12 +686,88 @@ export const ALGORITHMS: Record<AlgorithmId, AlgorithmMeta> = {
     complexity: { best: "O(n log n)", average: "O(n log n)", worst: "O(n²)", space: "O(log n)", stable: false },
     generate: quickSort,
   },
+  heap: {
+    id: "heap",
+    name: "Heap Sort",
+    summary: "Builds a max heap, then repeatedly places its largest value at the end.",
+    usageExample: "Example use: memory-constrained sorting, because it guarantees O(n log n) time while sorting in place.",
+    pseudocode: [
+      "build a max heap from a",
+      "for end = n - 1 down to 1",
+      "  heapify the subtree at each parent",
+      "  find the largest child of root",
+      "  if child is larger than root",
+      "    swap root and child; continue down",
+      "max heap is ready",
+      "swap a[0], a[end]; restore heap",
+      "return a",
+    ],
+    complexity: { best: "O(n log n)", average: "O(n log n)", worst: "O(n log n)", space: "O(1)", stable: false },
+    generate: heapSort,
+  },
+  counting: {
+    id: "counting",
+    name: "Counting Sort",
+    summary: "Counts each integer value, then rebuilds the array in value order.",
+    usageExample: "Example use: sorting exam scores from 0 to 100, because a small known value range makes counting faster than comparisons.",
+    pseudocode: [
+      "create counts for every possible value",
+      "for each value in a",
+      "  increment counts[value]",
+      "for each value in counts",
+      "  repeat counts[value] times",
+      "    write value to the next position",
+      "return a",
+    ],
+    complexity: { best: "O(n + k)", average: "O(n + k)", worst: "O(n + k)", space: "O(n + k)", stable: true },
+    generate: countingSort,
+  },
+  radix: {
+    id: "radix",
+    name: "Radix Sort",
+    summary: "Uses stable digit-by-digit counting passes, from least significant digit to most.",
+    usageExample: "Example use: sorting fixed-width positive IDs or postal codes, because digit passes avoid comparing whole numbers.",
+    pseudocode: [
+      "place = 1",
+      "while the largest value has a digit at place",
+      "  create ten digit buckets",
+      "  count each value's digit",
+      "  accumulate bucket positions",
+      "  stably write values back by digit",
+      "return a",
+    ],
+    complexity: { best: "O(d(n + k))", average: "O(d(n + k))", worst: "O(d(n + k))", space: "O(n + k)", stable: true },
+    generate: radixSort,
+  },
+  bucket: {
+    id: "bucket",
+    name: "Bucket Sort",
+    summary: "Distributes values across ranges, sorts the small buckets, then combines them.",
+    usageExample: "Example use: values spread evenly across a range, because evenly filled buckets keep the per-bucket sorting work small.",
+    pseudocode: [
+      "create buckets spanning the value range",
+      "for each value in a",
+      "  place value in its range bucket",
+      "sort each non-empty bucket",
+      "for each bucket in order",
+      "  copy its values back to a",
+      "return a",
+    ],
+    complexity: { best: "O(n + k)", average: "O(n + k)", worst: "O(n²)", space: "O(n + k)", stable: true },
+    generate: bucketSort,
+  },
 }
 
 export const ALGORITHM_LIST: AlgorithmMeta[] = [
   ALGORITHMS.bubble,
   ALGORITHMS.selection,
   ALGORITHMS.insertion,
+  ALGORITHMS.merge,
+  ALGORITHMS.quick,
+  ALGORITHMS.heap,
+  ALGORITHMS.counting,
+  ALGORITHMS.radix,
+  ALGORITHMS.bucket,
 ]
 
 export function randomArray(size = 12, min = 5, max = 100): number[] {
