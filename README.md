@@ -1,6 +1,6 @@
 # DS Visual Project
 
-An interactive sorting-algorithm visualizer designed to make each operation easy to follow. Watch an array change step by step, inspect the active pseudocode line, and compare algorithm complexity.
+An algorithm visualizer designed to be easy to follow. 
 <img width="1508" height="847" alt="image" src="https://github.com/user-attachments/assets/a5f3431b-cc05-4d6c-9f42-fd6a621f20fa" />
 
 ## Features
