@@ -111,8 +111,6 @@
 .bar[data-state="swap"] {
   background: var(--bar-swap);
   color: var(--bar-swap-ink);
-  outline: 3px solid var(--border);
-  outline-offset: 3px;
 }
 
 .chip[data-state="pivot"],
