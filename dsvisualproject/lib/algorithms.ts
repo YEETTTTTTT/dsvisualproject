@@ -28,6 +28,7 @@ export interface SortStep {
   explanation: string
   line: number
   compare?: StepCompare
+  variables: Record<string, number | string>
 }
 
 export interface AlgorithmMeta {
@@ -71,11 +72,12 @@ function bubbleSort(input: number[]): SortStep[] {
     explanation: string,
     line: number,
     compare?: StepCompare,
+    variables: Record<string, number | string> = { n },
   ) => {
     const merged: Record<number, HighlightKind> = {}
     sorted.forEach((i) => (merged[i] = "sorted"))
     Object.assign(merged, highlights)
-    steps.push({ array: [...a], highlights: merged, explanation, line, compare })
+    steps.push({ array: [...a], highlights: merged, explanation, line, compare, variables })
   }
 
   push({}, "Starting bubble sort. We repeatedly compare neighbours and let larger values bubble to the end.", 0)
@@ -96,17 +98,18 @@ function bubbleSort(input: number[]): SortStep[] {
           result: willSwap,
           action: willSwap ? "swap them" : "already in order",
         },
+        { n, i, j },
       )
       if (willSwap) {
         ;[a[j], a[j + 1]] = [a[j + 1], a[j]]
-        push({ [j]: "swap", [j + 1]: "swap" }, `${a[j + 1]} is larger than ${a[j]}, so we swap them.`, 3)
+        push({ [j]: "swap", [j + 1]: "swap" }, `${a[j + 1]} is larger than ${a[j]}, so we swap them.`, 3, undefined, { n, i, j })
       }
     }
     sorted.add(n - 1 - i)
-    push({}, `Position ${n - 1 - i} now holds its final value.`, 4)
+    push({}, `Position ${n - 1 - i} now holds its final value.`, 4, undefined, { n, i })
   }
   sorted.add(0)
-  push({}, "The array is fully sorted.", 5)
+  push({}, "The array is fully sorted.", 5, undefined, { n })
   return steps
 }
 
@@ -124,18 +127,19 @@ function selectionSort(input: number[]): SortStep[] {
     explanation: string,
     line: number,
     compare?: StepCompare,
+    variables: Record<string, number | string> = { n },
   ) => {
     const merged: Record<number, HighlightKind> = {}
     sorted.forEach((i) => (merged[i] = "sorted"))
     Object.assign(merged, highlights)
-    steps.push({ array: [...a], highlights: merged, explanation, line, compare })
+    steps.push({ array: [...a], highlights: merged, explanation, line, compare, variables })
   }
 
   push({}, "Starting selection sort. Each pass finds the smallest remaining value and moves it to the front.", 0)
 
   for (let i = 0; i < n - 1; i++) {
     let min = i
-    push({ [i]: "key", [min]: "pivot" }, `Assume position ${i} holds the smallest remaining value.`, 1)
+    push({ [i]: "key", [min]: "pivot" }, `Assume position ${i} holds the smallest remaining value.`, 1, undefined, { n, i, min })
     for (let j = i + 1; j < n; j++) {
       const isSmaller = a[j] < a[min]
       push(
@@ -151,21 +155,22 @@ function selectionSort(input: number[]): SortStep[] {
           result: isSmaller,
           action: isSmaller ? "new minimum" : "keep current minimum",
         },
+        { n, i, j, min },
       )
       if (isSmaller) {
         min = j
-        push({ [min]: "pivot" }, `${a[j]} is smaller — it becomes the new minimum.`, 4)
+        push({ [min]: "pivot" }, `${a[j]} is smaller — it becomes the new minimum.`, 4, undefined, { n, i, j, min })
       }
     }
     if (min !== i) {
       ;[a[i], a[min]] = [a[min], a[i]]
-      push({ [i]: "swap", [min]: "swap" }, `Swap the smallest value into position ${i}.`, 5)
+      push({ [i]: "swap", [min]: "swap" }, `Swap the smallest value into position ${i}.`, 5, undefined, { n, i, min })
     }
     sorted.add(i)
-    push({}, `Position ${i} is now sorted.`, 6)
+    push({}, `Position ${i} is now sorted.`, 6, undefined, { n, i, min })
   }
   sorted.add(n - 1)
-  push({}, "The array is fully sorted.", 7)
+  push({}, "The array is fully sorted.", 7, undefined, { n })
   return steps
 }
 
@@ -183,11 +188,12 @@ function insertionSort(input: number[]): SortStep[] {
     explanation: string,
     line: number,
     compare?: StepCompare,
+    variables: Record<string, number | string> = { n },
   ) => {
     const merged: Record<number, HighlightKind> = {}
     sorted.forEach((i) => (merged[i] = "sorted"))
     Object.assign(merged, highlights)
-    steps.push({ array: [...a], highlights: merged, explanation, line, compare })
+    steps.push({ array: [...a], highlights: merged, explanation, line, compare, variables })
   }
 
   push({}, "Starting insertion sort. We grow a sorted region on the left, inserting each new value into place.", 0)
@@ -195,7 +201,7 @@ function insertionSort(input: number[]): SortStep[] {
 
   for (let i = 1; i < n; i++) {
     const key = a[i]
-    push({ [i]: "key" }, `Take ${key} and find where it belongs in the sorted region.`, 1)
+    push({ [i]: "key" }, `Take ${key} and find where it belongs in the sorted region.`, 1, undefined, { n, i, key })
     let j = i - 1
     while (j >= 0 && a[j] > key) {
       push(
@@ -211,6 +217,7 @@ function insertionSort(input: number[]): SortStep[] {
           result: true,
           action: "shift right",
         },
+        { n, i, j, key },
       )
       a[j + 1] = a[j]
       j--
@@ -230,13 +237,14 @@ function insertionSort(input: number[]): SortStep[] {
           result: false,
           action: "insert key here",
         },
+        { n, i, j, key },
       )
     }
     a[j + 1] = key
-    push({ [j + 1]: "swap" }, `Insert ${key} at position ${j + 1}.`, 5)
+    push({ [j + 1]: "swap" }, `Insert ${key} at position ${j + 1}.`, 5, undefined, { n, i, j, key })
     sorted.add(i)
   }
-  push({}, "The array is fully sorted.", 6)
+  push({}, "The array is fully sorted.", 6, undefined, { n })
   return steps
 }
 
@@ -253,8 +261,9 @@ function mergeSort(input: number[]): SortStep[] {
     explanation: string,
     line: number,
     compare?: StepCompare,
+    variables: Record<string, number | string> = { n },
   ) => {
-    steps.push({ array: [...a], highlights: { ...highlights }, explanation, line, compare })
+    steps.push({ array: [...a], highlights: { ...highlights }, explanation, line, compare, variables })
   }
 
   push({}, "Starting merge sort. We split the array down to single elements, then merge sorted pieces back together.", 0)
@@ -282,27 +291,28 @@ function mergeSort(input: number[]): SortStep[] {
           result: leftWins,
           action: leftWins ? `write ${left[i]}` : `write ${right[j]}`,
         },
+        { n, lo, mid, hi, i, j, k },
       )
       if (leftWins) {
         a[k] = left[i]
-        push({ [k]: "swap" }, `${left[i]} is smaller, write it to position ${k}.`, 5)
+        push({ [k]: "swap" }, `${left[i]} is smaller, write it to position ${k}.`, 5, undefined, { n, lo, mid, hi, i, j, k })
         i++
       } else {
         a[k] = right[j]
-        push({ [k]: "swap" }, `${right[j]} is smaller, write it to position ${k}.`, 5)
+        push({ [k]: "swap" }, `${right[j]} is smaller, write it to position ${k}.`, 5, undefined, { n, lo, mid, hi, i, j, k })
         j++
       }
       k++
     }
     while (i < left.length) {
       a[k] = left[i]
-      push({ [k]: "swap" }, `Copy remaining ${left[i]} to position ${k}.`, 6)
+      push({ [k]: "swap" }, `Copy remaining ${left[i]} to position ${k}.`, 6, undefined, { n, lo, mid, hi, i, j, k })
       i++
       k++
     }
     while (j < right.length) {
       a[k] = right[j]
-      push({ [k]: "swap" }, `Copy remaining ${right[j]} to position ${k}.`, 6)
+      push({ [k]: "swap" }, `Copy remaining ${right[j]} to position ${k}.`, 6, undefined, { n, lo, mid, hi, i, j, k })
       j++
       k++
     }
@@ -313,14 +323,14 @@ function mergeSort(input: number[]): SortStep[] {
     const mid = Math.floor((lo + hi) / 2)
     const range: Record<number, HighlightKind> = {}
     for (let x = lo; x <= hi; x++) range[x] = "key"
-    push(range, `Split the range [${lo}…${hi}] into two halves.`, 2)
+    push(range, `Split the range [${lo}…${hi}] into two halves.`, 2, undefined, { n, lo, mid, hi })
     sort(lo, mid)
     sort(mid + 1, hi)
     merge(lo, mid, hi)
   }
 
   sort(0, n - 1)
-  push({}, "The array is fully sorted.", 7)
+  push({}, "The array is fully sorted.", 7, undefined, { n })
   return steps
 }
 
@@ -338,18 +348,19 @@ function quickSort(input: number[]): SortStep[] {
     explanation: string,
     line: number,
     compare?: StepCompare,
+    variables: Record<string, number | string> = { n },
   ) => {
     const merged: Record<number, HighlightKind> = {}
     sorted.forEach((i) => (merged[i] = "sorted"))
     Object.assign(merged, highlights)
-    steps.push({ array: [...a], highlights: merged, explanation, line, compare })
+    steps.push({ array: [...a], highlights: merged, explanation, line, compare, variables })
   }
 
   push({}, "Starting quick sort. We pick a pivot, partition values around it, then recurse on each side.", 0)
 
   const partition = (lo: number, hi: number) => {
     const pivot = a[hi]
-    push({ [hi]: "pivot" }, `Choose ${pivot} (position ${hi}) as the pivot.`, 2)
+    push({ [hi]: "pivot" }, `Choose ${pivot} (position ${hi}) as the pivot.`, 2, undefined, { n, lo, hi, pivot })
     let i = lo
     for (let j = lo; j < hi; j++) {
       const isLess = a[j] < pivot
@@ -366,17 +377,18 @@ function quickSort(input: number[]): SortStep[] {
           result: isLess,
           action: isLess ? "move left" : "leave in place",
         },
+        { n, lo, hi, pivot, i, j },
       )
       if (isLess) {
         if (i !== j) {
           ;[a[i], a[j]] = [a[j], a[i]]
-          push({ [hi]: "pivot", [i]: "swap", [j]: "swap" }, `${a[i]} is less than the pivot, move it left.`, 5)
+          push({ [hi]: "pivot", [i]: "swap", [j]: "swap" }, `${a[i]} is less than the pivot, move it left.`, 5, undefined, { n, lo, hi, pivot, i, j })
         }
         i++
       }
     }
     ;[a[i], a[hi]] = [a[hi], a[i]]
-    push({ [i]: "swap", [hi]: "swap" }, `Place the pivot into its final position ${i}.`, 6)
+    push({ [i]: "swap", [hi]: "swap" }, `Place the pivot into its final position ${i}.`, 6, undefined, { n, lo, hi, pivot, i })
     sorted.add(i)
     return i
   }
@@ -394,7 +406,7 @@ function quickSort(input: number[]): SortStep[] {
 
   sort(0, n - 1)
   for (let i = 0; i < n; i++) sorted.add(i)
-  push({}, "The array is fully sorted.", 7)
+  push({}, "The array is fully sorted.", 7, undefined, { n })
   return steps
 }
 
@@ -406,11 +418,17 @@ function heapSort(input: number[]): SortStep[] {
   const steps: SortStep[] = []
   const sorted = new Set<number>()
 
-  const push = (highlights: Record<number, HighlightKind>, explanation: string, line: number, compare?: StepCompare) => {
+  const push = (
+    highlights: Record<number, HighlightKind>,
+    explanation: string,
+    line: number,
+    compare?: StepCompare,
+    variables: Record<string, number | string> = { n: a.length },
+  ) => {
     const merged: Record<number, HighlightKind> = {}
     sorted.forEach((index) => (merged[index] = "sorted"))
     Object.assign(merged, highlights)
-    steps.push({ array: [...a], highlights: merged, explanation, line, compare })
+    steps.push({ array: [...a], highlights: merged, explanation, line, compare, variables })
   }
 
   const siftDown = (root: number, size: number) => {
@@ -434,6 +452,7 @@ function heapSort(input: number[]): SortStep[] {
             result: leftWins,
             action: leftWins ? "left child becomes largest" : "keep parent largest",
           },
+          { n: a.length, root, size, left, largest },
         )
         if (leftWins) largest = left
       }
@@ -452,19 +471,20 @@ function heapSort(input: number[]): SortStep[] {
             result: rightWins,
             action: rightWins ? "right child becomes largest" : "keep current largest",
           },
+          { n: a.length, root, size, left, right, largest },
         )
         if (rightWins) largest = right
       }
       if (largest === root) return
       ;[a[root], a[largest]] = [a[largest], a[root]]
-      push({ [root]: "swap", [largest]: "swap" }, `Swap ${a[largest]} down to restore the max heap.`, 5)
+      push({ [root]: "swap", [largest]: "swap" }, `Swap ${a[largest]} down to restore the max heap.`, 5, undefined, { n: a.length, root, size, left, right, largest })
       root = largest
     }
   }
 
   push({}, "Starting heap sort. Build a max heap, then repeatedly move its largest value to the end.", 0)
   for (let root = Math.floor(a.length / 2) - 1; root >= 0; root--) {
-    push({ [root]: "pivot" }, `Heapify the subtree rooted at position ${root}.`, 2)
+    push({ [root]: "pivot" }, `Heapify the subtree rooted at position ${root}.`, 2, undefined, { n: a.length, root, size: a.length })
     siftDown(root, a.length)
   }
   push({}, "The array now forms a max heap.", 6)
@@ -472,7 +492,7 @@ function heapSort(input: number[]): SortStep[] {
   for (let end = a.length - 1; end > 0; end--) {
     ;[a[0], a[end]] = [a[end], a[0]]
     sorted.add(end)
-    push({ 0: "swap", [end]: "swap" }, `Move the maximum value into final position ${end}.`, 7)
+    push({ 0: "swap", [end]: "swap" }, `Move the maximum value into final position ${end}.`, 7, undefined, { n: a.length, end })
     siftDown(0, end)
   }
   if (a.length) sorted.add(0)
@@ -488,24 +508,29 @@ function countingSort(input: number[]): SortStep[] {
   const steps: SortStep[] = []
   const max = Math.max(...a, 0)
 
-  const push = (highlights: Record<number, HighlightKind>, explanation: string, line: number) => {
-    steps.push({ array: [...a], highlights, explanation, line })
+  const push = (
+    highlights: Record<number, HighlightKind>,
+    explanation: string,
+    line: number,
+    variables: Record<string, number | string> = { n: a.length, max },
+  ) => {
+    steps.push({ array: [...a], highlights, explanation, line, variables })
   }
 
   push({}, "Starting counting sort. Count each value, then write values back in ascending order.", 0)
   const counts = Array(max + 1).fill(0)
   for (let index = 0; index < a.length; index++) {
     counts[a[index]]++
-    push({ [index]: "key" }, `Count one occurrence of ${a[index]}.`, 2)
+    push({ [index]: "key" }, `Count one occurrence of ${a[index]}.`, 2, { n: a.length, max, index, value: a[index], "counts[value]": counts[a[index]] })
   }
 
   let write = 0
   for (let value = 0; value <= max; value++) {
     if (counts[value] === 0) continue
-    push({}, `Value ${value} occurs ${counts[value]} time${counts[value] === 1 ? "" : "s"}; write it back.`, 4)
+    push({}, `Value ${value} occurs ${counts[value]} time${counts[value] === 1 ? "" : "s"}; write it back.`, 4, { n: a.length, max, value, "counts[value]": counts[value], write })
     for (let occurrence = 0; occurrence < counts[value]; occurrence++) {
       a[write] = value
-      push({ [write]: "swap" }, `Write ${value} at position ${write}.`, 5)
+      push({ [write]: "swap" }, `Write ${value} at position ${write}.`, 5, { n: a.length, max, value, occurrence, write })
       write++
     }
   }
@@ -523,19 +548,24 @@ function radixSort(input: number[]): SortStep[] {
   const steps: SortStep[] = []
   const max = Math.max(...a, 0)
 
-  const push = (highlights: Record<number, HighlightKind>, explanation: string, line: number) => {
-    steps.push({ array: [...a], highlights, explanation, line })
+  const push = (
+    highlights: Record<number, HighlightKind>,
+    explanation: string,
+    line: number,
+    variables: Record<string, number | string> = { n: a.length, max },
+  ) => {
+    steps.push({ array: [...a], highlights, explanation, line, variables })
   }
 
   push({}, "Starting radix sort. Sort by the ones digit, then tens, hundreds, and so on.", 0)
   for (let place = 1; Math.floor(max / place) > 0; place *= 10) {
     const output = Array<number>(a.length)
     const counts = Array(10).fill(0)
-    push({}, `Sort values by their ${place === 1 ? "ones" : place === 10 ? "tens" : `${place}s`} digit.`, 2)
+    push({}, `Sort values by their ${place === 1 ? "ones" : place === 10 ? "tens" : `${place}s`} digit.`, 2, { n: a.length, max, place })
     for (let index = 0; index < a.length; index++) {
       const digit = Math.floor(a[index] / place) % 10
       counts[digit]++
-      push({ [index]: "key" }, `Place ${a[index]} in digit bucket ${digit}.`, 3)
+      push({ [index]: "key" }, `Place ${a[index]} in digit bucket ${digit}.`, 3, { n: a.length, max, place, index, digit, "counts[digit]": counts[digit] })
     }
     for (let digit = 1; digit < 10; digit++) counts[digit] += counts[digit - 1]
     for (let index = a.length - 1; index >= 0; index--) {
@@ -544,7 +574,7 @@ function radixSort(input: number[]): SortStep[] {
     }
     for (let index = 0; index < a.length; index++) {
       a[index] = output[index]
-      push({ [index]: "swap" }, `Write ${a[index]} back at position ${index} after this digit pass.`, 5)
+      push({ [index]: "swap" }, `Write ${a[index]} back at position ${index} after this digit pass.`, 5, { n: a.length, max, place, index })
     }
   }
   const sorted: Record<number, HighlightKind> = {}
@@ -560,8 +590,13 @@ function bucketSort(input: number[]): SortStep[] {
   const a = [...input]
   const steps: SortStep[] = []
 
-  const push = (highlights: Record<number, HighlightKind>, explanation: string, line: number) => {
-    steps.push({ array: [...a], highlights, explanation, line })
+  const push = (
+    highlights: Record<number, HighlightKind>,
+    explanation: string,
+    line: number,
+    variables: Record<string, number | string> = { n: a.length },
+  ) => {
+    steps.push({ array: [...a], highlights, explanation, line, variables })
   }
 
   push({}, "Starting bucket sort. Distribute values into ranges, sort each bucket, then combine them.", 0)
@@ -574,7 +609,7 @@ function bucketSort(input: number[]): SortStep[] {
   for (let index = 0; index < a.length; index++) {
     const bucket = Math.min(bucketCount - 1, Math.floor((a[index] - min) / width))
     buckets[bucket].push(a[index])
-    push({ [index]: "key" }, `Place ${a[index]} in bucket ${bucket}.`, 2)
+    push({ [index]: "key" }, `Place ${a[index]} in bucket ${bucket}.`, 2, { n: a.length, min, max, bucketCount, width, index, bucket })
   }
 
   let write = 0
@@ -582,10 +617,10 @@ function bucketSort(input: number[]): SortStep[] {
     const values = buckets[bucket]
     if (values.length === 0) continue
     values.sort((left, right) => left - right)
-    push({}, `Sort bucket ${bucket}: ${values.join(", ")}.`, 3)
+    push({}, `Sort bucket ${bucket}: ${values.join(", ")}.`, 3, { n: a.length, min, max, bucketCount, width, bucket })
     for (const value of values) {
       a[write] = value
-      push({ [write]: "swap" }, `Copy ${value} from bucket ${bucket} to position ${write}.`, 5)
+      push({ [write]: "swap" }, `Copy ${value} from bucket ${bucket} to position ${write}.`, 5, { n: a.length, bucket, value, write })
       write++
     }
   }

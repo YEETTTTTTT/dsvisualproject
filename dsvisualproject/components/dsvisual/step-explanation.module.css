@@ -57,3 +57,43 @@
   color: var(--text);
   text-wrap: pretty;
 }
+
+.variables {
+  padding-top: 0.85rem;
+  border-top: 2px solid var(--border);
+}
+
+.variablesTitle {
+  margin: 0 0 0.55rem;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.variableList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.variable {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.35rem 0.5rem;
+  border: 2px solid var(--border);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.variable dt {
+  font-weight: 900;
+}
+
+.variable dd {
+  margin: 0;
+}

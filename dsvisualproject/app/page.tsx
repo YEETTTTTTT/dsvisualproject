@@ -153,6 +153,7 @@ export default function Page() {
                 explanation={current.explanation}
                 step={safeStep}
                 totalSteps={totalSteps}
+                variables={current.variables}
               />
             </div>
             <div className={styles.softCard}>
