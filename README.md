@@ -17,7 +17,8 @@ An interactive sorting-algorithm visualizer designed to make each operation easy
 - Random or custom arrays (up to 20 values, clamped to the range 1-100)
 - Play, pause, restart, seek, and adjustable playback speed
 - Highlighted comparisons, swaps, pivots, keys, and sorted values
-- Live explanations, pseudocode, language-specific implementations, and complexity details
+- Live explanations paired with a variable tracker that shows the current pseudocode values, such as `i`, `j`, `n`, `key`, `pivot`, and `min`
+- Highlighted active pseudocode lines, language-specific implementations, and complexity details
 - Keyboard controls: <kbd>Space</kbd> to play or pause, <kbd>Left Arrow</kbd> and <kbd>Right Arrow</kbd> to move between steps
 
 ## Getting Started
