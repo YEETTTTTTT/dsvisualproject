@@ -3,7 +3,7 @@
 import { Pause, Play, RotateCcw, SkipBack, SkipForward } from "lucide-react"
 import styles from "./playback-controls.module.css"
 
-const SPEEDS = [0.5, 1, 2, 4] as const
+const SPEEDS = [0.5, 1, 2, 5] as const
 
 interface PlaybackControlsProps {
   isPlaying: boolean

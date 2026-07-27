@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem 0.75rem;
-  min-height: 4.25rem;
+  min-height: 6.25rem;
   padding: 0.85rem 1.25rem;
   border: 3px solid var(--border);
   background: var(--surface-2);
