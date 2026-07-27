@@ -17,9 +17,11 @@
   width: 2.5rem;
   height: 2.5rem;
   flex-shrink: 0;
-  border-radius: var(--r-pill);
-  color: var(--bar-compare-ink);
+  border: 3px solid var(--border);
+  border-radius: 0;
+  color: var(--text);
   background: var(--yellow);
+  box-shadow: 3px 3px 0 var(--border);
 }
 
 .badgeIcon {
@@ -30,26 +32,28 @@
 .title {
   margin: 0;
   font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
   color: var(--text);
 }
 
 .step {
   margin-left: auto;
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 900;
   font-variant-numeric: tabular-nums;
-  color: var(--text-muted);
-  background: var(--surface-2);
-  padding: 0.35rem 0.75rem;
-  border-radius: var(--r-pill);
+  color: var(--text);
+  background: var(--red);
+  padding: 0.35rem 0.55rem;
+  border: 2px solid var(--border);
+  border-radius: 0;
 }
 
 .body {
   margin: 0;
   font-size: 1.1rem;
-  line-height: 1.6;
+  line-height: 1.45;
   color: var(--text);
   text-wrap: pretty;
 }

@@ -32,20 +32,15 @@ export default function Page() {
   const current = steps[safeStep]
   const isLast = step >= totalSteps - 1
 
-  // Reset progress whenever the algorithm or source array changes.
-  useEffect(() => {
+  const resetPlayback = useCallback(() => {
     setStep(0)
     setIsPlaying(false)
-  }, [algorithmId, baseArray])
+  }, [])
 
-  // Autoplay loop.
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   useEffect(() => {
     if (!isPlaying) return
-    if (isLast) {
-      setIsPlaying(false)
-      return
-    }
+    if (isLast) return
     timerRef.current = setTimeout(() => {
       setStep((s) => Math.min(s + 1, totalSteps - 1))
     }, BASE_DELAY / speed)
@@ -55,13 +50,12 @@ export default function Page() {
   }, [isPlaying, step, isLast, speed, totalSteps])
 
   const handlePlayPause = useCallback(() => {
-    setIsPlaying((playing) => {
-      if (!playing && isLast) {
-        setStep(0)
-        return true
-      }
-      return !playing
-    })
+    if (isLast) {
+      setStep(0)
+      setIsPlaying(true)
+      return
+    }
+    setIsPlaying((playing) => !playing)
   }, [isLast])
 
   const handlePrev = useCallback(() => {
@@ -84,8 +78,20 @@ export default function Page() {
     setStep(s)
   }, [])
 
-  const handleRandom = useCallback(() => setBaseArray(randomArray(12)), [])
-  const handleCustom = useCallback((values: number[]) => setBaseArray(values), [])
+  const handleAlgorithmChange = useCallback((id: AlgorithmId) => {
+    setAlgorithmId(id)
+    resetPlayback()
+  }, [resetPlayback])
+
+  const handleRandom = useCallback(() => {
+    setBaseArray(randomArray(12))
+    resetPlayback()
+  }, [resetPlayback])
+
+  const handleCustom = useCallback((values: number[]) => {
+    setBaseArray(values)
+    resetPlayback()
+  }, [resetPlayback])
 
   // Keyboard shortcuts (ignored while typing in the custom-array input).
   useEffect(() => {
@@ -110,7 +116,8 @@ export default function Page() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <AlgorithmSelector value={algorithmId} onChange={setAlgorithmId} />
+        <Header />
+        <AlgorithmSelector value={algorithmId} onChange={handleAlgorithmChange} />
         <div className={styles.workspace}>
           <section className={styles.stage} aria-label="Array visualization">
             <div className={styles.stageTop}>
@@ -125,7 +132,7 @@ export default function Page() {
             </div>
 
             <PlaybackControls
-              isPlaying={isPlaying}
+              isPlaying={isPlaying && !isLast}
               onPlayPause={handlePlayPause}
               onPrev={handlePrev}
               onNext={handleNext}

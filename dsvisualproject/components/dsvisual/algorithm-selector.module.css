@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.1rem;
+  gap: 1rem;
 }
 
 .srOnly {
@@ -21,45 +21,48 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.6rem;
-  padding: 0.5rem;
-  background: var(--surface);
-  border-radius: var(--r-pill);
-  box-shadow: var(--shadow-soft);
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--yellow);
+  border: 4px solid var(--border);
+  box-shadow: var(--shadow-large);
 }
 
 .pill {
   appearance: none;
-  border: 0;
+  border: 3px solid var(--border);
   cursor: pointer;
   font: inherit;
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--text-muted);
-  background: transparent;
-  padding: 0.7rem 1.6rem;
-  border-radius: var(--r-pill);
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  font-weight: 900;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: var(--surface);
+  padding: 0.75rem 1.25rem;
+  box-shadow: 3px 3px 0 var(--text);
+  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background-color 0.1s ease-out;
 }
 
 .pill:hover:not([data-selected]) {
-  background: var(--surface-2);
-  color: var(--text);
+  background: var(--yellow);
 }
 
 .pill:active {
-  transform: scale(0.96);
+  transform: translate(3px, 3px);
+  box-shadow: none;
 }
 
 .pill[data-selected] {
-  background: var(--blue);
-  color: #fff;
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--blue) 40%, transparent);
+  background: var(--red);
+  color: var(--text);
+  box-shadow: 3px 3px 0 var(--text);
 }
 
 .pill:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px var(--blue);
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
 }
 
 .pill:disabled {
@@ -71,15 +74,16 @@
   margin: 0;
   max-width: 44rem;
   text-align: center;
-  font-size: 1.02rem;
-  line-height: 1.6;
-  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--text);
   text-wrap: pretty;
 }
 
 .summaryName {
   color: var(--text);
-  font-weight: 700;
+  font-weight: 900;
+  text-transform: uppercase;
   margin-right: 0.4rem;
 }
 
@@ -87,8 +91,11 @@
   margin: -0.55rem 0 0;
   max-width: 44rem;
   text-align: center;
-  font-size: 0.92rem;
-  line-height: 1.5;
-  color: var(--text-muted);
+  padding: 0.35rem 0.65rem;
+  border: 2px solid var(--border);
+  background: var(--surface-2);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--text);
   text-wrap: pretty;
 }

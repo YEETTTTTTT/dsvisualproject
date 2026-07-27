@@ -6,7 +6,7 @@ import styles from "./bar-visualization.module.css"
 
 interface BarVisualizationProps {
   array: number[]
-  highlights: Record<number, HighlightKind>
+  highlights: Partial<Record<number, HighlightKind>>
 }
 
 export function BarVisualization({ array, highlights }: BarVisualizationProps) {

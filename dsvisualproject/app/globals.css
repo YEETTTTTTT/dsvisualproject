@@ -1,60 +1,45 @@
 @import "tailwindcss";
 
-/* Map the few utility classes still used by the layout shell to our tokens. */
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--text);
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
-/* ------------------------------------------------------------------ */
-/* DSVisual design tokens — a playful, Google-inspired palette.        */
-/* Four brand hues (blue, red, yellow, green) double as the algorithm  */
-/* state colors; everything else is soft neutral surface + spacing.    */
-/* ------------------------------------------------------------------ */
 :root {
   color-scheme: light;
-
-  /* Brand */
-  --blue: #4285f4;
-  --blue-strong: #1a73e8;
-  --red: #ea4335;
-  --yellow: #fbbc05;
-  --green: #34a853;
-
-  /* Surfaces & text */
-  --bg: #f5f8fd;
+  --bg: #fffdf5;
   --surface: #ffffff;
-  --surface-2: #eef2fb;
-  --surface-3: #e6ecf7;
-  --text: #1f2430;
-  --text-muted: #5f6674;
-  --text-faint: #949bab;
-  --border: #e6ebf4;
-
-  /* Bar / algorithm states */
-  --bar-default: #c6d4ee;
-  --bar-default-ink: #34435f;
-  --bar-compare: #fbbc05;
-  --bar-compare-ink: #4a3600;
-  --bar-swap: #ea4335;
-  --bar-swap-ink: #ffffff;
-  --bar-pivot: #4285f4;
-  --bar-pivot-ink: #ffffff;
-  --bar-sorted: #34a853;
-  --bar-sorted-ink: #ffffff;
-
-  /* Geometry — oversized, soft rounding */
-  --r-xl: 32px;
-  --r-lg: 26px;
-  --r-md: 18px;
-  --r-sm: 12px;
+  --surface-2: #c4b5fd;
+  --surface-3: #ffd93d;
+  --text: #000000;
+  --text-muted: #000000;
+  --text-faint: #000000;
+  --border: #000000;
+  --blue: #c4b5fd;
+  --blue-strong: #8b5cf6;
+  --red: #ff6b6b;
+  --yellow: #ffd93d;
+  --green: #75d38a;
+  --bar-default: #ffffff;
+  --bar-default-ink: #000000;
+  --bar-compare: #ffd93d;
+  --bar-compare-ink: #000000;
+  --bar-swap: #ff6b6b;
+  --bar-swap-ink: #000000;
+  --bar-pivot: #c4b5fd;
+  --bar-pivot-ink: #000000;
+  --bar-sorted: #75d38a;
+  --bar-sorted-ink: #000000;
+  --r-xl: 0;
+  --r-lg: 0;
+  --r-md: 0;
+  --r-sm: 0;
   --r-pill: 999px;
-
-  /* Elevation */
-  --shadow-soft: 0 1px 2px rgba(31, 36, 48, 0.06), 0 6px 20px rgba(31, 36, 48, 0.06);
-  --shadow-hover: 0 2px 6px rgba(31, 36, 48, 0.1), 0 12px 34px rgba(31, 36, 48, 0.14);
+  --shadow-soft: 4px 4px 0 #000;
+  --shadow-hover: 8px 8px 0 #000;
+  --shadow-large: 12px 12px 0 #000;
 }
 
 @layer base {
@@ -69,39 +54,31 @@
     min-height: 100dvh;
     background-color: var(--bg);
     color: var(--text);
-    /* Subtle organic background shapes in the brand colors. */
     background-image:
-      radial-gradient(38rem 38rem at 12% -8%, rgba(66, 133, 244, 0.1), transparent 60%),
-      radial-gradient(32rem 32rem at 105% 8%, rgba(52, 168, 83, 0.09), transparent 60%),
-      radial-gradient(30rem 30rem at 88% 108%, rgba(251, 188, 5, 0.12), transparent 62%),
-      radial-gradient(26rem 26rem at -6% 96%, rgba(234, 67, 53, 0.08), transparent 60%);
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+      linear-gradient(to right, rgb(0 0 0 / 10%) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(0 0 0 / 10%) 1px, transparent 1px);
+    background-size: 32px 32px;
+    font-family: var(--font-space-grotesk), sans-serif;
+    font-weight: 700;
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* Gentle, purposeful motion. All respect reduced-motion.              */
-/* ------------------------------------------------------------------ */
 @keyframes dsv-pop-in {
   0% {
-    opacity: 0;
-    transform: translateY(8px) scale(0.97);
+    transform: translate(-4px, -4px);
   }
   100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate(0);
   }
 }
 
 @keyframes dsv-fade-in {
   0% {
-    opacity: 0;
-    transform: translateY(4px);
+    transform: translateX(-6px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
@@ -111,20 +88,20 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-3px) rotate(-2deg);
   }
 }
 
 .dsv-pop-in {
-  animation: dsv-pop-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: dsv-pop-in 0.18s ease-out;
 }
 
 .dsv-fade-in {
-  animation: dsv-fade-in 0.35s ease-out;
+  animation: dsv-fade-in 0.2s ease-out;
 }
 
 .dsv-bob {
-  animation: dsv-bob 1.2s ease-in-out infinite;
+  animation: dsv-bob 0.8s ease-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

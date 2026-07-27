@@ -3,16 +3,17 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem 0.85rem;
+  gap: 0.5rem 0.75rem;
   min-height: 4.25rem;
   padding: 0.85rem 1.25rem;
-  border-radius: var(--r-lg);
+  border: 3px solid var(--border);
   background: var(--surface-2);
+  box-shadow: var(--shadow-soft);
 }
 
 .idle {
-  background: transparent;
-  border: 2px dashed var(--border);
+  background: var(--surface);
+  border: 3px dashed var(--border);
 }
 
 .idleText {
@@ -20,7 +21,9 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.95rem;
-  color: var(--text-faint);
+  color: var(--text);
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .idleIcon {
@@ -50,8 +53,8 @@
 .operandLabel {
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-weight: 900;
+  color: var(--text);
 }
 
 .operandValue {
@@ -62,7 +65,8 @@
   color: var(--text);
   background: var(--surface);
   padding: 0.3rem 0.8rem;
-  border-radius: var(--r-sm);
+  border: 3px solid var(--border);
+  border-radius: 0;
   box-shadow: var(--shadow-soft);
 }
 
@@ -72,19 +76,20 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: var(--r-pill);
-  background: var(--blue);
-  color: #fff;
+  border: 3px solid var(--border);
+  border-radius: 0;
+  background: var(--red);
+  color: var(--text);
   font-family: var(--font-mono);
   font-size: 1.35rem;
   font-weight: 800;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--blue) 40%, transparent);
+  box-shadow: 3px 3px 0 var(--border);
 }
 
 .arrow {
   width: 1.35rem;
   height: 1.35rem;
-  color: var(--text-faint);
+  color: var(--text);
 }
 
 .result {
@@ -92,16 +97,17 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.45rem 0.95rem;
-  border-radius: var(--r-pill);
+  border: 3px solid var(--border);
+  border-radius: 0;
   font-size: 0.95rem;
   font-weight: 700;
   background: var(--surface-3);
-  color: var(--text-muted);
+  color: var(--text);
 }
 
 .result[data-true] {
   background: var(--green);
-  color: #fff;
+  color: var(--text);
 }
 
 .resultIcon {
@@ -111,6 +117,7 @@
 
 .action {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 900;
+  text-transform: uppercase;
   color: var(--text);
 }

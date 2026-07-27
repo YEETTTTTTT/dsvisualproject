@@ -2,15 +2,16 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1rem 1.5rem;
+  gap: 1rem 1.25rem;
 }
 
 .title {
   margin: 0;
   flex: 1 1 100%;
   font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
   color: var(--text);
 }
 
@@ -18,7 +19,7 @@
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
   flex: 1 1 auto;
 }
 
@@ -28,22 +29,26 @@
   gap: 0.15rem;
   min-width: 7rem;
   flex: 1 1 7rem;
-  padding: 0.85rem 1.1rem;
-  border-radius: var(--r-md);
-  background: var(--surface-2);
+  padding: 0.85rem 1rem;
+  border: 3px solid var(--border);
+  border-radius: 0;
+  background: var(--surface);
+  box-shadow: 4px 4px 0 var(--border);
 }
 
 .metricLabel {
   font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text);
 }
 
 .metricValue {
   margin: 0;
   font-family: var(--font-mono);
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 900;
   color: var(--text);
 }
 
@@ -52,16 +57,18 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.7rem 1.1rem;
-  border-radius: var(--r-pill);
+  border: 3px solid var(--border);
+  border-radius: 0;
   font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--red);
-  background: color-mix(in srgb, var(--red) 12%, transparent);
+  font-weight: 900;
+  color: var(--text);
+  background: var(--red);
+  box-shadow: 3px 3px 0 var(--border);
 }
 
 .stable[data-stable] {
-  color: var(--green);
-  background: color-mix(in srgb, var(--green) 12%, transparent);
+  color: var(--text);
+  background: var(--green);
 }
 
 .stableIcon {
